@@ -2,7 +2,6 @@ import Image from 'next/image'
 import { ChangeEvent, useState, DragEvent } from 'react'
 
 import DefaultUploadImage from '@/assets/image.svg'
-import { useSupabase } from '@/hooks/useSupabase'
 import { toast } from 'react-toastify'
 
 interface UploadImageProps {
@@ -12,8 +11,6 @@ interface UploadImageProps {
 
 export function UploadImage({ setIsLoading, setImageUrl }: UploadImageProps) {
   const [isDragging, setIsDragging] = useState(false)
-
-  const supabase = useSupabase()
 
   function validateFileType(file: File): boolean {
     if (file.type.startsWith('image/')) {
@@ -56,36 +53,24 @@ export function UploadImage({ setIsLoading, setImageUrl }: UploadImageProps) {
       try {
         setIsLoading(true)
 
-        const { data } = await supabase.storage
-          .from('images')
-          .list(`public`, { search: file.name })
+        const formData = new FormData()
+        formData.append('file', file)
 
-        if (data?.length) {
-          console.log('DATA =>', data)
-          const { data: imageUrl } = await supabase.storage
-            .from('images')
-            .getPublicUrl(`public/${file.name}`)
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
 
-          return setImageUrl(imageUrl.publicUrl)
-        }
-
-        const { data: uploadedData, error } = await supabase.storage
-          .from('images')
-          .upload(`public/${file.name}`, file)
-
+        const { imageUrl, error } = await response.json()
         if (error) {
-          toast.error('Please select an image (JPEG, PNG, JPG)')
+          throw new Error(error)
         }
 
-        if (uploadedData?.path) {
-          const { data: imageUrl } = await supabase.storage
-            .from('images')
-            .getPublicUrl(uploadedData?.path)
-
-          setImageUrl(imageUrl.publicUrl)
-        }
+        setImageUrl(imageUrl)
       } catch (error) {
-        console.error('error', error)
+        if (error instanceof Error) {
+          toast.error(error.message)
+        }
       } finally {
         setIsLoading(false)
       }
@@ -110,6 +95,7 @@ export function UploadImage({ setIsLoading, setImageUrl }: UploadImageProps) {
           alt="Default image"
           width={115}
           height={100}
+          priority
         />
         <h3 className="text-gray-300 text-sm">
           {isDragging ? 'Drop your image' : 'Drag & Drop your image here'}
