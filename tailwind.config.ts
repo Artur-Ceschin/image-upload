@@ -15,7 +15,8 @@ const config: Config = {
         background: '#FAFAFB',
         primary: '#2F80ED',
         gray: {
-          '100': '#F6F8FB',
+          '50': '#F6F8FB',
+          '100': '#F2F2F2',
           '200': '#E0E0E0',
           '300': '#BDBDBD',
           '400': '#828282',

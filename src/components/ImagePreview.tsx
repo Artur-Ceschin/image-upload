@@ -25,7 +25,7 @@ export function ImagePreview({ imageUrl }: ImagePreviewProps) {
         height={300}
       />
 
-      <div className="rounded-lg border-2 border-gray-200 w-full flex mt-4 items-center bg-gray-100">
+      <div className="rounded-lg border-2 border-gray-200 w-full flex mt-4 items-center bg-gray-50">
         <div className="text-gray-500 px-3 text-xs overflow-hidden whitespace-nowrap text-ellipsis max-w-[80%]">
           {imageUrl}
         </div>

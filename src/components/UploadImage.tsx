@@ -86,7 +86,7 @@ export function UploadImage({ setIsLoading, setImageUrl }: UploadImageProps) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`bg-gray-100 border-2 border-dashed rounded-xl p-10 flex items-center flex-col w-full justify-center gap-10 ${
+        className={`bg-gray-50 border-2 border-dashed rounded-xl p-10 flex items-center flex-col w-full justify-center gap-10 ${
           isDragging ? 'opacity-70 border-green' : 'border-light-blue'
         }`}
       >
